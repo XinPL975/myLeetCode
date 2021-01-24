@@ -1,0 +1,43 @@
+给定一个 没有重复 数字的序列，返回其所有可能的全排列。
+
+示例:
+
+输入: [1,2,3]
+输出:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+
+
+class Solution {
+    List<List<Integer>> result=new LinkedList<>();   //对result的声明一定要写在函数外！
+    
+    public List<List<Integer>> permute(int[] nums) {     
+        LinkedList<Integer> track=new LinkedList<>();
+        backtrack(nums,track);
+        return result;
+    }
+
+    public void backtrack(int[] nums,LinkedList<Integer> track){
+        if(track.size()==nums.length){
+            result.add(new LinkedList(track));    //这里不能用result.add(track);  原因见下！
+            return;
+        }
+        for(int i=0;i<nums.length;i++){
+            if(track.contains(nums[i])) continue;
+            track.add(nums[i]);
+            backtrack(nums,track);
+            track.removeLast();          //注意LinkedList才有removeLast()方法，ArrayList没有这个方法！所以全程都用LinkedList
+        }
+    }
+}
+
+变量track所指向的列表在深度优先遍历的过程中只有一份，深度优先遍历完成以后，回到了根结点，成为空列表。
+在 Java 中，参数传递是值传递，对象类型变量在传参的过程中，复制的是变量的地址。
+这些地址被添加到return变量，但实际上指向的是同一块内存地址，因此我们会看到空的列表对象。
+解决的方法很简单，传入new LinkedList(track) 即可
