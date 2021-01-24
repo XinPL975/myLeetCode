@@ -18,7 +18,7 @@ class Solution {
     List<List<Integer>> result=new LinkedList<>();   //对result的声明一定要写在函数外！
     
     public List<List<Integer>> permute(int[] nums) {     
-        LinkedList<Integer> track=new LinkedList<>();
+        LinkedList<Integer> track=new LinkedList<>();    //编译看左边，运行看右边，track需要调用LinkedList的removeLast()方法，所以左边也要声明为LinkedList！
         backtrack(nums,track);
         return result;
     }
