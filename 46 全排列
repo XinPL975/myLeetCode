@@ -13,7 +13,6 @@
   [3,2,1]
 ]
 
-
 class Solution {
     List<List<Integer>> result=new LinkedList<>();   //对result的声明一定要写在函数外！
     
