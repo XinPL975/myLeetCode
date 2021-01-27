@@ -1,0 +1,71 @@
+给出一个区间的集合，请合并所有重叠的区间。
+
+示例 1:
+
+输入: intervals = [[1,3],[2,6],[8,10],[15,18]]
+输出: [[1,6],[8,10],[15,18]]
+解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+
+示例 2:
+
+输入: intervals = [[1,4],[4,5]]
+输出: [[1,5]]
+解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。
+
+
+法1（自己写的，不是特别简洁）
+class Solution {
+    public int[][] merge(int[][] intervals) {           //特别注意！Java中数组不能进行add元素！非常不方便！解决方式之一为先用集合 再将集合转为数组！
+        List<int[]> resultList=new ArrayList<>();     //一定要记得集合用泛型，否则返回的是Object而不是指定类型！
+        Arrays.sort(intervals,(a,b)->{
+            if(a[0]==b[0]){
+                return b[1]-a[1];
+            }else{
+                return a[0]-b[0];
+            }
+        });
+        resultList.add(intervals[0]);         //只有集合才能用add方法，方便！
+        for(int i=1;i<intervals.length;i++){
+            int[] last=resultList.get(resultList.size()-1);     //找出resultList中的最后一个元素（此处可以用int[]接收是因为泛型标注了类型！）
+           
+           //以下三行代码可以实现功能但不是特别简便
+            if(last[1]>=intervals[i][1]) continue;
+            if(last[1]>=intervals[i][0] && last[1]<intervals[i][1]) last[1]=intervals[i][1];     //一定要注意if条件写完整
+            if(last[1]<intervals[i][0])  resultList.add(intervals[i]);
+        }
+        //以下两行为将集合转为数组的方法！牢记！
+        int[][] resultArray=new int[resultList.size()][];   //首先提前声明定义数组，包括长度！（一维长度一定要声明）
+        resultList.toArray(resultArray);                    //再将集合resultList转为提前声明好的数组resultArray
+        return resultArray;
+    }
+}
+
+
+法2  （改进了一丢丢）
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        List<int[]> resultList=new ArrayList<>();
+        Arrays.sort(intervals,(a,b)->{
+            if(a[0]==b[0]){
+                return b[1]-a[1];
+            }else{
+                return a[0]-b[0];
+            }
+        });
+        resultList.add(intervals[0]);
+        for(int i=1;i<intervals.length;i++){
+            int[] last=resultList.get(resultList.size()-1);
+            
+            //以下代码为与法1不同的地方（稍微简洁了一点）
+            if(last[0]<=intervals[i][0] && intervals[i][0]<=last[1]){   //注意！Java中不能使用x<y<z 只能用x<y && y<z
+                last[1]=Math.max(last[1],intervals[i][1]);   //注意！Math.max！ 
+            }else{
+                resultList.add(intervals[i]);
+            }
+            
+        }
+        int[][] resultArray=new int[resultList.size()][];
+        resultList.toArray(resultArray);
+        return resultArray;
+    }
+}
