@@ -1,0 +1,55 @@
+给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
+
+k 是一个正整数，它的值小于或等于链表的长度。
+
+如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
+
+ 
+示例：
+
+给你这个链表：1->2->3->4->5
+
+当 k = 2 时，应当返回: 2->1->4->3->5
+
+当 k = 3 时，应当返回: 3->2->1->4->5
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+ 
+ 注意:链表是一种兼具递归和迭代性质的数据结构
+ 以下的解答方法融合了迭代和递归的思想
+ 
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode end=head;
+        for(int i=0;i<k;i++){   //找到第k+1个元素   注意！反转的是k个元素为一组，第k+1个元素才为end(end不属于反转的元素）
+            if(end==null) return head; //若在循环过程中end就为null，说明该链表不足k个元素，则链表不变
+            end=end.next;
+        }
+        ListNode newHead=reverse(head,end);  //首先用以下的reverse方法反转前k个元素  返回新的newhead 即为整个链表的head
+        head.next=reverseKGroup(end,k);    //递归 这里的head是反转前k个元素后的尾巴
+        return newHead;
+    }
+
+    ListNode reverse(ListNode head,ListNode end){  //反转[head,end)之间的元素，注意是左闭右开！！
+        ListNode prev,curr,next;   //迭代：prev、curr、next这个迭代结构非常重要！注意初始化和循环过程
+        prev=end;
+        curr=next=head;
+        while(curr!=end){
+            next=curr.next;
+            curr.next=prev;
+            prev=curr;
+            curr=next;
+        }
+        return prev;  //由于左闭右开，最后返回的是prev！因为curr此时为end（end不属于要反转的元素)
+    }
+}
