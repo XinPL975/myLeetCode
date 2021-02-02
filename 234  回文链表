@@ -1,0 +1,56 @@
+请判断一个链表是否为回文链表。
+
+示例 1:
+
+输入: 1->2
+输出: false
+
+示例 2:
+
+输入: 1->2->2->1
+输出: true
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        ListNode slow,fast;
+        slow=fast=head;
+        while(fast!=null && fast.next!=null){   //注意细节！！while和if注意区分 该写while的地方一定不要写成if了！
+            slow=slow.next;                     //注意这里判断是fast和fast.null是否为null  （为了使slow在回文的后半部分开头）
+            fast=fast.next.next;
+        }
+        if(fast!=null) slow=slow.next;   //使slow在回文的后半部分开头，可以直接从slow开始反转
+        ListNode left,right;
+        left=head;
+        right=reverse(slow);
+        while(right!=null){
+            if(left.val!=right.val) return false;   //一定要注意！！这里回文链表比较是比较它的值！ListNode.val！！不是直接比较ListNode！！
+            left=left.next;
+            right=right.next;
+        }
+        return true;
+
+    }
+
+    ListNode reverse(ListNode head){   //反转以head为头节点的链表  一定要熟悉这个操作 非常常用！
+        ListNode prev,curr,next;
+        prev=null;
+        curr=next=head;
+        while(curr!=null){
+            next=curr.next;
+            curr.next=prev;
+            prev=curr;
+            curr=next;
+        }
+        return prev;
+    }
+}
