@@ -34,6 +34,8 @@
  *     }
  * }
  */
+ 注意：这道题的关键点在于 翻转整棵树就是交换每个节点的左右子节点！于是把交换左右子节点的代码放在前序遍历的位置！
+ 
 class Solution {
     public TreeNode invertTree(TreeNode root) {
         if(root==null) return root;   //一定不要忘记root为null的特殊情况！否则会出现空指针异常！切记切记！
