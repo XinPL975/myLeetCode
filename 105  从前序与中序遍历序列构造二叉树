@@ -1,0 +1,54 @@
+根据一棵树的前序遍历与中序遍历构造二叉树。
+
+注意:
+你可以假设树中没有重复的元素。
+
+例如，给出
+
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return build(preorder,0,preorder.length-1,inorder,0,inorder.length-1);
+    }
+
+    TreeNode build(int[] preorder,int preStart,int preEnd,int[] inorder,int inStart,int inEnd){
+        if(preorder.length==0 || preStart>preEnd) return null;
+        TreeNode root=new TreeNode(preorder[preStart]);
+        int inIndex=-1;
+        for(int i=inStart;i<=inEnd;i++){
+            if(inorder[i]==preorder[preStart]){
+                inIndex=i;
+                break;  //有break更好！但没有break也不影响时间和内存
+            }
+        }
+        root.left=build(preorder,preStart+1,preStart+inIndex-inStart,inorder,inStart,inIndex-1);  //递归这里的索引是关键！需要自己在草稿纸上算！仔细！
+        root.right=build(preorder,preStart+inIndex-inStart+1,inEnd+preStart-inStart,inorder,inIndex+1,inEnd); 
+        //注意最后的inEnd不能写成inorder.length-1!因为数组inorder是没有变的!变的是inEnd！！注意注意
+        return root;
+    }
+
+}
