@@ -1,0 +1,34 @@
+给定一个二叉搜索树的根节点 root ，和一个整数 k ，请你设计一个算法查找其中第 k 个最小元素（从 1 开始计数）。
+
+注：二叉搜索树的中序遍历可以得到升序排列的结果！！重点！解题关键！
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+ 法一：自己想的代码 思路简单 但时间复杂度和内存消耗较高 不完美
+class Solution {
+    List<Integer> listSort=new ArrayList();     //注意！！这个List的声明一定要写在两个方法的外面！因为是跟两个方法均有关系的！且每次递归都是在之前的基础上操作！理解！
+    public int kthSmallest(TreeNode root, int k) {
+        traverseSort(root);
+        return listSort.get(k-1);
+
+    }
+    void traverseSort(TreeNode root){
+        if(root==null) return;
+        traverseSort(root.left);
+        listSort.add(root.val);
+        traverseSort(root.right);
+    }
+}
