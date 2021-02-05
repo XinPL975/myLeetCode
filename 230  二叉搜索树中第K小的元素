@@ -32,3 +32,45 @@ class Solution {
         traverseSort(root.right);
     }
 }
+
+
+法二： 先判断要找的第k小的元素在根节点的左边还是右边（时间消耗大大减少）
+class Solution {
+    
+    public int kthSmallest(TreeNode root, int k) {
+        int left=number(root.left);
+        if(left>=k){       //注意！不要忘记=等号！！不是> 是>=！！！
+            return kthSmallest(root.left, k);
+        }else if(left+1==k){
+            return root.val;
+        }else{
+            return kthSmallest(root.right, k-left-1);
+        }
+
+    }
+    
+    int number(TreeNode root){
+        if(root==null) return 0;
+        return number(root.left)+number(root.right)+1;
+    }
+}
+
+法三：内存消耗最少 时间介于法一法二之间
+class Solution {
+    int result;
+    int num;
+    public int kthSmallest(TreeNode root, int k) {
+        traverse(root, k);
+        return result;
+
+    }
+    
+    void traverse(TreeNode root,int k){
+        if(root==null) return;
+        traverse(root.left, k);
+        num++;
+        if(num==k) result=root.val;
+        traverse(root.right, k);
+    }
+    
+}
