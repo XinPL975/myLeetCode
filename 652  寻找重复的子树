@@ -1,0 +1,65 @@
+给定一棵二叉树，返回所有重复的子树。对于同一类的重复子树，你只需要返回其中任意一棵的根结点即可。
+
+两棵树重复是指它们具有相同的结构以及相同的结点值。
+
+示例 1：
+
+        1
+       / \
+      2   3
+     /   / \
+    4   2   4
+       /
+      4
+下面是两个重复的子树：
+
+      2
+     /
+    4
+和
+
+    4
+因此，你需要以列表的形式返回上述重复子树的根结点。
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+ 
+class Solution {
+    Set<String> tree=new HashSet();    //这个Set用来存储不重复的所有子二叉树           //注意：这三个集合的预定义要在主函数和辅助函数之前，因为主函数和辅助函数均用到这三个集合！
+    Set<String> res=new HashSet();     //这个Set用来存储不重复的重复子二叉树
+    List<TreeNode> result=new ArrayList();  //这个List用来存储重复子二叉树的树节点TreeNode类型的root（即最终返回值)
+    
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        traverseTree(root);
+        return result;
+    }
+
+    String traverseTree(TreeNode root){
+        if(root==null) return "#";                 //定义：如果root为null则其序列化的String为“#”，只是个标识而已
+        String left=traverseTree(root.left);       //在找到节点的每个子二叉树是什么样子之前需要先找到左子二叉树和右子二叉树的所有子二叉树  所以是后序遍历！！
+        String right=traverseTree(root.right);
+        String subTree=left+","+right+","+root.val;   //注意这里一定要用“，”区分  因为仅仅由后序遍历是无法确定一棵树的结构的  加入逗号以辅助区分是否是相同的树结构！
+        //以下代码确认子二叉树是否已重复  以及加入List中重复的子二叉树是否重复（因为此题目要求：对于同一类的重复子树，只需要返回其中任意一棵的根结点即可。）
+        if(!tree.contains(subTree)){
+            tree.add(subTree);
+        }else if(!res.contains(subTree)){
+            res.add(subTree);   
+            result.add(root);
+        }
+        return subTree;
+    }
+}
