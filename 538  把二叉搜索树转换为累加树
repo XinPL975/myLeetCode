@@ -30,9 +30,9 @@ class Solution {
         return root;
     }
 
-    void traverse(TreeNode root){   //这个函数的作用是后序遍历 使得二叉搜索树呈降序排列的结果！非常关键！
+    void traverse(TreeNode root){   //这个函数的作用是使得遍历二叉搜索树呈降序排列的结果！非常关键！
         if(root==null) return;
-        traverse(root.right);  //后序遍历 注意先traverse(root.right)  再traverse(root.left) 
+        traverse(root.right);  // 因为遍历代码写在traverse(root.left)和traverse(root.right)之间可以升序排列  所以调换一下 先traverse(root.right) 再traverse(root.left)即为降序排列！！
         sum +=root.val;    
         root.val=sum;   //这一句非常重要 稍微有点难理解！ 由于是降序排列 则遍历后得到的sum结果均是由大于或等于自己(root)的数相加而得 即为新节点的数值 直接将其赋给root.val  ！！深刻体会！
         traverse(root.left);
