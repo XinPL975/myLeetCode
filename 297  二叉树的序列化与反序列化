@@ -1,0 +1,62 @@
+序列化是将一个数据结构或者对象转换为连续的比特位的操作，进而可以将转换后的数据存储在一个文件或者内存中，同时也可以通过网络传输到另一个计算机环境，采取相反方式重构得到原数据。
+
+请设计一个算法来实现二叉树的序列化与反序列化。这里不限定你的序列 / 反序列化算法执行逻辑，你只需要保证一个二叉树可以被序列化为一个字符串并且将这个字符串反序列化为原始的树结构。
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ 注：用的是前序遍历
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder st=new StringBuilder(); //因为要不停往字符串里加内容 所以用可变的StringBuilder
+        serialize(root,st);
+        return st.toString();   //注意最后要把StringBuilder转换为String
+        
+    }
+  
+    //序列化的辅助方法
+    void serialize(TreeNode root,StringBuilder st){
+        if(root==null) {
+            st.append("#,");  //尤其注意！StringBuilder不能直接用+拼接字符串！ 要用append()方法！！
+            return;  //注意！！！这里需要直接return！否则会继续执行下面的代码！！
+        }
+        st.append(root.val+",");
+        serialize(root.left,st);  //前序遍历的框架
+        serialize(root.right,st);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] nodesArray=data.split(",");  //注意一下java的split用法 直接返回的是数组！
+        LinkedList<String> nodesLinkedList=new LinkedList<>();  //LinkedList具有poll()方法，返回并删除队列的第一个值
+        for(String str:nodesArray){
+            nodesLinkedList.add(str);
+        }
+        return deserialize(nodesLinkedList);
+        
+    }
+
+    //反序列化的辅助方法
+    TreeNode deserialize(LinkedList<String> nodesLinkedList){
+        if(nodesLinkedList.isEmpty()) return null;  //isEmpty()是个方法 不要忘记要加括号()！！
+        String node=nodesLinkedList.poll();
+        if("#".equals(node)) return null;
+        TreeNode root=new TreeNode(Integer.parseInt(node));
+        root.left=deserialize(nodesLinkedList);  //同样是前序遍历的框架
+        root.right=deserialize(nodesLinkedList);
+        return root;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser = new Codec();
+// Codec deser = new Codec();
+// TreeNode ans = deser.deserialize(ser.serialize(root));
