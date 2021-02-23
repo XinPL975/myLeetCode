@@ -1,0 +1,35 @@
+给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+
+百度百科中最近公共祖先的定义为：“对于有根树 T 的两个节点 p、q，最近公共祖先表示为一个节点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+
+提示：
+
+树中节点数目在范围 [2, 105] 内。
+-109 <= Node.val <= 109
+所有 Node.val 互不相同 。
+p != q
+p 和 q 均存在于给定的二叉树中。
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ 
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null) return null;
+        if(p==root || q==root) return root;   //这是两个基础情况 注意递归的结果不是null就是root
+        
+        TreeNode left=lowestCommonAncestor(root.left, p, q);
+        TreeNode right=lowestCommonAncestor(root.right, p, q);  //后序遍历 （意味着树从下往上，找到的第一个交界点就是最近的公共祖先）
+        
+        if(left!=null && right!=null) return root;   //这三种情况都建立在递归结果为null or root
+        if(left==null && right==null) return null;
+        return left==null?right:left;
+    }
+}
