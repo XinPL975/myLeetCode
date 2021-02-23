@@ -17,9 +17,33 @@
  *     }
  * }
  */
+ 
+ 法一：基础版（普通二叉树）
 class Solution {
     public int countNodes(TreeNode root) {
         if(root==null) return 0;
         return 1+countNodes(root.left)+countNodes(root.right);   //递归思想 非常巧妙！
+    }
+}
+
+
+法二：时间复杂度减小（基于完全二叉树的特点）
+注意：一棵完全二叉树的两棵子树，至少有一棵是满二叉树！！！
+
+class Solution {
+    public int countNodes(TreeNode root) {
+        if(root==null) return 0;
+        TreeNode leftroot=root,rightroot=root;  //注意这里初始化Java不能连等！  且计算左右子树的高度是从root开始！！！
+        int left_h=0,right_h=0;
+        while(leftroot!=null){
+            left_h++;
+            leftroot=leftroot.left;
+        }
+        while(rightroot!=null){
+            right_h++;
+            rightroot=rightroot.right;
+        }
+        if(left_h==right_h) return (int)(Math.pow(2,left_h)-1);   //满二叉树！              //注意Java中的a的n次方表示方式是Math.pow(a,n)！！！ 
+        return 1+countNodes(root.left)+countNodes(root.right);    //不是满二叉树就用普通方法计算
     }
 }
